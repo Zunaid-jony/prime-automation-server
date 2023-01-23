@@ -75,6 +75,13 @@ async function run() {
       const result = await imageCollection.insertOne(image);
       res.json(result);
     });
+    // get image
+    app.get("/image", async (req, res) => {
+      const cursor = imageCollection.find({});
+      const user = await cursor.toArray();
+      res.send(user);
+    });
+
 
   } finally {
     // await client.close();
