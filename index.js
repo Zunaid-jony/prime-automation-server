@@ -24,8 +24,29 @@ async function run() {
     const database = client.db("primeDatabase");
     const productCollection = database.collection("products");
     const imageCollection = database.collection("images");
+    const userCollection = database.collection("users");
 
     //post product
+// user reg....
+    app.post("/register", async (req, res) => {
+      const user = req.body;
+
+      /* try {
+        bcrypt.hash(user.password, saltRounds, async function (err, hash) {
+          const newUser = new User({
+            email: user.email,
+            password: hash,
+          });
+          const result = await userCollection.insertOne(newUser);
+          res.json(result);
+        });
+      } catch (error) {
+        res.status(500).json(error.message);
+      } */
+
+      const result = await userCollection.insertOne(user);
+      res.json(result);
+    });
     // users post api
     app.post("/product", async (req, res) => {
       const product = req.body;
@@ -81,6 +102,16 @@ async function run() {
       const user = await cursor.toArray();
       res.send(user);
     });
+    
+
+
+
+
+
+
+
+
+    
 
 
   } finally {
