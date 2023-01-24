@@ -23,6 +23,7 @@ async function run() {
     await client.connect();
     const database = client.db("primeDatabase");
     const productCollection = database.collection("products");
+    const blogProductCollection = database.collection("blogs");
     const imageCollection = database.collection("images");
     const userCollection = database.collection("users");
 
@@ -101,6 +102,58 @@ async function run() {
       const cursor = imageCollection.find({});
       const user = await cursor.toArray();
       res.send(user);
+    });
+
+    // Blog api 
+    // Blog api 
+    // Blog api 
+    // Blog api 
+    // Blog api 
+    // Blog api 
+
+
+     // Blog post api
+    //    const blogProductCollection = database.collection("blogs");
+     app.post("/blog", async (req, res) => {
+      const blog = req.body;
+      const result = await blogProductCollection.insertOne(blog);
+      res.json(result);
+    });
+    // get single blog
+    app.get("/blog/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const question = await blogProductCollection.findOne(query);
+      res.json(question);
+    });
+    // get all blog
+    app.get("/blog", async (req, res) => {
+      const cursor = blogProductCollection.find({});
+      const user = await cursor.toArray();
+      res.send(user);
+    });
+
+    // update blog
+    app.put("/blog", async (req, res) => {
+      const blog = req.body;
+      const filter = { _id: ObjectId(blog?._id) };
+      const options = { upsert: true };
+      const updateDoc = { $set: blog };
+      const result = await blogProductCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
+      res.json(result);
+    });
+
+    //delete product
+
+    app.delete("/blog/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await blogProductCollection.deleteOne(query);
+      res.json(result);
     });
     
 
