@@ -116,21 +116,21 @@ async function run() {
     //    const blogProductCollection = database.collection("blogs");
      app.post("/blog", async (req, res) => {
       const blog = req.body;
-      const result = await blogProductCollection.insertOne(blog);
-      res.json(result);
+      const result1 = await blogProductCollection.insertOne(blog);
+      res.json(result1);
     });
     // get single blog
     app.get("/blog/:id", async (req, res) => {
       const id = req.params.id;
-      const query = { _id: ObjectId(id) };
-      const question = await blogProductCollection.findOne(query);
-      res.json(question);
+      const query1 = { _id: ObjectId(id) };
+      const question1 = await blogProductCollection.findOne(query1);
+      res.json(question1);
     });
     // get all blog
     app.get("/blog", async (req, res) => {
-      const cursor = blogProductCollection.find({});
-      const user = await cursor.toArray();
-      res.send(user);
+      const cursor1 = blogProductCollection.find({});
+      const user1 = await cursor1.toArray();
+      res.send(user1);
     });
 
     // update blog
