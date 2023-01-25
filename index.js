@@ -157,6 +157,80 @@ async function run() {
     });
     
 
+    //register
+    app.post("/register", async (req, res) => {
+      const { firstName, lastName, email, password } = req.body;
+      bcrypt.hash(password, 10, (err, hash) => {
+        if (err) {
+          return res.status(500).json({
+            error: err,
+          });
+        } else {
+          const user = new User({
+            firstName,
+            lastName,
+            email,
+            password: hash,
+          });
+          console.log(user);
+          const result = userCollection.insertOne(user);
+          res.json(result);
+        }
+      });
+    });
+
+    // login
+    app.post("/login", async (req, res) => {
+      const { email, password } = req.body;
+      const query = { email: email };
+      const userList = await userCollection.findOne(query);
+      const resData = {
+        firstName: userList?.firstName,
+        lastName: userList?.lastName,
+        email: userList?.email,
+        id: userList?._id,
+        role: userList?.role,
+      };
+      bcrypt.compare(password, userList.password, function (err, result) {
+        if (result === true) {
+          const token = jwt.sign(
+            {
+              email,
+            },
+            process.env.JWT_SECRET,
+            {
+              expiresIn: "2h",
+            }
+          );
+          res.status(200).json({ ...resData, token });
+        } else {
+          res.status(401).json("Invalid login id or password");
+        }
+      });
+    });
+
+    // logout
+
+    app.post("/logout", (req, res) => {
+      res.status(200).json("Logged out successfully");
+    });
+
+    // set user role
+    app.put("/userRole", async (req, res) => {
+      const user = req.body;
+      console.log("user", user);
+      const filter = { email: user.email };
+      const updateDoc = { $set: { role: user?.role } };
+      const result = await userCollection.updateOne(filter, updateDoc);
+      res.json(result);
+    });
+    // get all user
+    app.get("/user", async (req, res) => {
+      const cursor = userCollection.find({});
+      const user = await cursor.toArray();
+      res.send(user);
+    });
+
 
 
 
