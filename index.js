@@ -23,7 +23,9 @@ async function run() {
     await client.connect();
     const database = client.db("primeDatabase");
     const productCollection = database.collection("products");
+    const productCollectionMain = database.collection("productMain");
     const blogProductCollection = database.collection("blogs");
+    const addUserCollection = database.collection("addUser");
     const imageCollection = database.collection("images");
     const userCollection = database.collection("users");
 
@@ -48,6 +50,60 @@ async function run() {
       const result = await userCollection.insertOne(user);
       res.json(result);
     });
+
+// Products
+// Products
+// Products
+// Products
+  // users post api
+  app.post("/products", async (req, res) => {
+    const products = req.body;
+    const result = await productCollectionMain.insertOne(products);
+    res.json(result);
+  });
+  // get single product
+  app.get("/products/:id", async (req, res) => {
+    const id = req.params.id;
+    const query = { _id: ObjectId(id) };
+    const question = await productCollectionMain.findOne(query);
+    res.json(question);
+  });
+  // get all product
+  app.get("/products", async (req, res) => {
+    const cursor = productCollectionMain.find({});
+    const user = await cursor.toArray();
+    res.send(user);
+  });
+
+  // update product
+  app.put("/products", async (req, res) => {
+    const product = req.body;
+    const filter = { _id: ObjectId(product?._id) };
+    const options = { upsert: true };
+    const updateDoc = { $set: product };
+    const result = await productCollectionMain.updateOne(
+      filter,
+      updateDoc,
+      options
+    );
+    res.json(result);
+  });
+
+  //delete product
+
+  app.delete("/products/:id", async (req, res) => {
+    const id = req.params.id;
+    const query = { _id: ObjectId(id) };
+    const result = await productCollectionMain.deleteOne(query);
+    res.json(result);
+  });
+
+
+
+
+    // users post api
+    // users post api
+    // users post api
     // users post api
     app.post("/product", async (req, res) => {
       const product = req.body;
@@ -155,6 +211,62 @@ async function run() {
       const result = await blogProductCollection.deleteOne(query);
       res.json(result);
     });
+
+
+    // ADD USER TEST.........
+    // ADD USER TEST.........
+    // ADD USER TEST.........
+    // ADD USER TEST.........
+    // ADD USER TEST.........
+    // Blog post api
+    //    const blogProductCollection = database.collection("blogs");
+    app.post("/add", async (req, res) => {
+      const blog = req.body;
+      const result1 = await addUserCollection.insertOne(blog);
+      res.json(result1);
+    });
+    // get single blog
+    app.get("/add/:id", async (req, res) => {
+      const id = req.params.id;
+      const query1 = { _id: ObjectId(id) };
+      const question1 = await addUserCollection.findOne(query1);
+      res.json(question1);
+    });
+    // get all blog
+    app.get("/add", async (req, res) => {
+      const cursor1 = addUserCollection.find({});
+      const user1 = await cursor1.toArray();
+      res.send(user1);
+    });
+
+    // update blog
+    app.put("/add", async (req, res) => {
+      const blog = req.body;
+      const filter = { _id: ObjectId(blog?._id) };
+      const options = { upsert: true };
+      const updateDoc = { $set: blog };
+      const result = await addUserCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
+      res.json(result);
+    });
+
+    //delete product
+
+    app.delete("/add/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await addUserCollection.deleteOne(query);
+      res.json(result);
+    });
+    
+    // .......................
+    // .......................
+    // .......................
+    // .......................
+    // .......................
     
 
     //register
