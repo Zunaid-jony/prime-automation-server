@@ -51,6 +51,20 @@ async function run() {
       res.json(result);
     });
 
+
+
+
+    // user login
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  const user = await userCollection.findOne({ email, password });
+  if (user) {
+    res.json({ success: true, message: "Login successful" });
+  } else {
+    res.json({ success: false, message: "Invalid credentials" });
+  }
+});
+
 // Products
 // Products
 // Products
@@ -269,57 +283,95 @@ async function run() {
     // .......................
     
 
-    //register
-    app.post("/register", async (req, res) => {
-      const { firstName, lastName, email, password } = req.body;
-      bcrypt.hash(password, 10, (err, hash) => {
-        if (err) {
-          return res.status(500).json({
-            error: err,
-          });
-        } else {
-          const user = new User({
-            firstName,
-            lastName,
-            email,
-            password: hash,
-          });
-          console.log(user);
-          const result = userCollection.insertOne(user);
-          res.json(result);
-        }
-      });
-    });
+    
+    // app.post("/register", async (req, res) => {
+    //   const { firstName, lastName, email, password } = req.body;
+    //   bcrypt.hash(password, 10, (err, hash) => {
+    //     if (err) {
+    //       return res.status(500).json({
+    //         error: err,
+    //       });
+    //     } else {
+    //       const user = new User({
+    //         firstName,
+    //         lastName,
+    //         email,
+    //         password: hash,
+    //       });
+    //       console.log(user);
+    //       const result = userCollection.insertOne(user);
+    //       res.json(result);
+    //     }
+    //   });
+    // });
+
+
+
+
+    
+    // app.post("/login", async (req, res) => {
+    //   try {
+    //     const { email, password } = req.body;
+    //     if (!email || !password) {
+    //       return res.status(400).json("Email and password are required");
+    //     }
+    //     const query = { email: email };
+    //     const userList = await userCollection.findOne(query);
+    //     if (!userList) {
+    //       return res.status(401).json("Invalid login id or password");
+    //     }
+    //     const isMatch = await bcrypt.compare(password, userList.password);
+    //     if (!isMatch) {
+    //       return res.status(401).json("Invalid login id or password");
+    //     }
+    //     const token = jwt.sign({ email }, process.env.JWT_SECRET, {
+    //       expiresIn: "2h",
+    //     });
+    //     const resData = {
+    //       firstName: userList.firstName,
+    //       lastName: userList.lastName,
+    //       email: userList.email,
+    //       id: userList._id,
+    //       role: userList.role,
+    //       token,
+    //     };
+    //     res.status(200).json(resData);
+    //   } catch (err) {
+    //     console.error(err);
+    //     res.status(500).json("Server error");
+    //   }
+    // });
+    
 
     // login
-    app.post("/login", async (req, res) => {
-      const { email, password } = req.body;
-      const query = { email: email };
-      const userList = await userCollection.findOne(query);
-      const resData = {
-        firstName: userList?.firstName,
-        lastName: userList?.lastName,
-        email: userList?.email,
-        id: userList?._id,
-        role: userList?.role,
-      };
-      bcrypt.compare(password, userList.password, function (err, result) {
-        if (result === true) {
-          const token = jwt.sign(
-            {
-              email,
-            },
-            process.env.JWT_SECRET,
-            {
-              expiresIn: "2h",
-            }
-          );
-          res.status(200).json({ ...resData, token });
-        } else {
-          res.status(401).json("Invalid login id or password");
-        }
-      });
-    });
+    // app.post("/login", async (req, res) => {
+    //   const { email, password } = req.body;
+    //   const query = { email: email };
+    //   const userList = await userCollection.findOne(query);
+    //   const resData = {
+    //     firstName: userList?.firstName,
+    //     lastName: userList?.lastName,
+    //     email: userList?.email,
+    //     id: userList?._id,
+    //     role: userList?.role,
+    //   };
+    //   bcrypt.compare(password, userList.password, function (err, result) {
+    //     if (result === true) {
+    //       const token = jwt.sign(
+    //         {
+    //           email,
+    //         },
+    //         process.env.JWT_SECRET,
+    //         {
+    //           expiresIn: "2h",
+    //         }
+    //       );
+    //       res.status(200).json({ ...resData, token });
+    //     } else {
+    //       res.status(401).json("Invalid login id or password");
+    //     }
+    //   });
+    // });
 
     // logout
 
