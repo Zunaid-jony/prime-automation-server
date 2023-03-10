@@ -90,16 +90,28 @@ app.post("/login", async (req, res) => {
   });
 
   // update product
-  app.put("/products", async (req, res) => {
+  // app.put("/products", async (req, res) => {
+  //   const product = req.body;
+  //   const filter = { _id: ObjectId(product?._id) };
+  //   const options = { upsert: true };
+  //   const updateDoc = { $set: product };
+  //   const result = await productCollectionMain.updateOne(
+  //     filter,
+  //     updateDoc,
+  //     options
+  //   );
+  //   res.json(result);
+  // });
+
+
+
+  app.put("/products/:id", async (req, res) => {
+    const id = req.params.id;
+    const filter = { _id: ObjectId(id) };
     const product = req.body;
-    const filter = { _id: ObjectId(product?._id) };
     const options = { upsert: true };
     const updateDoc = { $set: product };
-    const result = await productCollectionMain.updateOne(
-      filter,
-      updateDoc,
-      options
-    );
+    const result = await productCollectionMain.updateOne(filter, updateDoc, options);
     res.json(result);
   });
 
